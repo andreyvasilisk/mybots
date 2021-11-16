@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-from fake_useragent import UserAgent
 import time
 import requests
 import sqlite3
@@ -27,7 +26,7 @@ def send_message(chat_id, text):  # send telegram message
         url = URL + f'sendMessage?chat_id={chat_id}&text={text}'
         requests.get(url)
     except Exception as ex:
-        pass
+        print(ex)
 
 send_message(1731254825, "run")
 
