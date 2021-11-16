@@ -1,5 +1,5 @@
 beautifulsoup4==4.9.2
-requests==2.24.0
+requests==2.18.2
 appdirs==1.4.3
 certifi==2018.1.18
 Cython==0.23
