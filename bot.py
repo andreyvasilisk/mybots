@@ -1,7 +1,6 @@
-import sqlite3
+import sqlite3  
 import telebot
 from fake_useragent import UserAgent
-from config import TOKEN
 import time
 useragent = UserAgent()
 
@@ -16,7 +15,7 @@ db.commit()
 
 
 # bot
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot("2103027208:AAFedt2lIax0kZraXsqSgAe8VSW6VHLx8ZQ")
 
 
 @bot.message_handler(commands=['start'])
