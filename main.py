@@ -33,7 +33,7 @@ send_message(1731254825, "run")
 def write_file(src, car):  # write to file
     try:
         for line in src:
-            if get_name(car) == str(line):
+            if get_link(car) == str(line):
                 return False
         return True
     except Exception as ex:
@@ -50,21 +50,21 @@ def main():
                 users = pickle.load(f)
             with open('cars.txt', 'r+', encoding='utf-8') as file:
                 src = file.read().split('\n')
-            for car in cars:
-                if write_file(src, car):
-                    file.writelines(get_name(car) + "\n")
-                    for user in users:
-                        try:
-                            send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}")
-                        except:
-                            pass
-                else:
-                    continue
+                for car in cars:
+                    if write_file(src, car):
+                        file.writelines(get_link(car) + "\n")
+                        for user in users:
+                            try:
+                                send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
+                            except:
+                                pass
+                    else:
+                        continue
         except Exception as ex:
             send_message(1731254825, str(ex))
             time.sleep(10)
             
-        time.sleep(40)
+        time.sleep(20)
 
 
 x = threading.Thread(target=main)
