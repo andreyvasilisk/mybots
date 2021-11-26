@@ -26,7 +26,7 @@ def send_message(chat_id, text):  # send telegram message
         url = URL + f'sendMessage?chat_id={chat_id}&text={text}'
         requests.get(url)
     except Exception as ex:
-        send_message(1731254825, str(ex))
+        print(ex)
 
 send_message(1731254825, "run")
 
@@ -37,7 +37,7 @@ def write_file(src, car):  # write to file
                 return False
         return True
     except Exception as ex:
-        send_message(1731254825, str(ex))
+        print(ex)
 
 
 def main():
@@ -61,7 +61,7 @@ def main():
                     else:
                         continue
         except Exception as ex:
-            send_message(1731254825, str(ex))
+            print(ex)
             time.sleep(10)
             
         time.sleep(20)
