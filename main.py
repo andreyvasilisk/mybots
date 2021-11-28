@@ -20,6 +20,14 @@ def get_link(car):
     return "https://auktion.biliaoutlet.se" + car.find('a', class_='card__inner').get('href')
 
 
+def reset_mem():
+    with open('cars.dat', 'wb') as f:
+        pickle.dump([], f)
+
+        
+#reset_mem()
+
+
 def send_message(chat_id, text):  # send telegram message
     try:
         URL = 'https://api.telegram.org/bot' + "2103027208:AAFedt2lIax0kZraXsqSgAe8VSW6VHLx8ZQ" + '/'
@@ -30,14 +38,18 @@ def send_message(chat_id, text):  # send telegram message
 
 send_message(1731254825, "run")
 
-def write_file(src, car):  # write to file
-    try:
-        for line in src:
-            if get_link(car) == str(line):
-                return False
+def check_car(link):
+    with open('cars.dat', 'rb') as f:
+        cars_mem = pickle.load(f)
+    if link not in cars_mem:
+        cars_mem.append(link)
+        if len(cars_mem) > 40:
+            cars_mem = cars_mem[-40:]
+        with open('cars.dat', 'wb') as f:
+            pickle.dump(cars_mem, f)
         return True
-    except Exception as ex:
-        print(ex)
+    return False
+
 
 
 def main():
@@ -48,16 +60,15 @@ def main():
             cars = soup.find_all(class_='card') + BeautifulSoup(requests.get('https://auktion.biliaoutlet.se').text, 'lxml').find_all(class_='card')
             with open('users.pickle', 'rb') as f:
                 users = pickle.load(f)
-            with open('cars.txt', 'r+', encoding='utf-8') as file:
-                src = file.read().split('\n')
-                for car in cars:
-                    if write_file(src, car):
-                        file.writelines(get_link(car) + "\n")
-                        for user in users:
-                            try:
-                                send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
-                            except:
-                                pass
+                print(users)
+            
+            for car in cars:
+                if check_car(get_link(car)):
+                    for user in users:
+                        try:
+                            send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
+                        except:
+                            pass
                     else:
                         continue
         except Exception as ex:
