@@ -65,9 +65,9 @@ def main():
             car = cars[0]
 
             print(get_name(car))
-            print(check_car(get_link(car)))
+            #print(check_car(get_link(car)))
             
-            if check_car(get_link(car)) == True:
+            if check_car(get_link(car)):
                 for user in users:
                     print("sending " + str(user))
                     try:
