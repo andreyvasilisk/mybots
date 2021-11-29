@@ -67,8 +67,9 @@ def main():
             print(get_name(car))
             print(check_car(get_link(car)))
             
-            if check_car(get_link(car)):
+            if check_car(get_link(car)) == True:
                 for user in users:
+                    print("sending " + str(user))
                     try:
                         send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
                         #print(f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}")
