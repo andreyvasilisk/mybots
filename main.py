@@ -72,8 +72,8 @@ def main():
                     try:
                         send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
                         #print(f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}")
-                    except:
-                        pass
+                    except Exception as ex:
+                        print(ex)
                 
         except Exception as ex:
             print(ex)
