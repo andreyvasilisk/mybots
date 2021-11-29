@@ -62,7 +62,7 @@ def main():
                 users = pickle.load(f)
                 print(users)
             
-            for car in cars:
+            for car in cars[0]:
                 if check_car(get_link(car)):
                     for user in users:
                         try:
@@ -72,7 +72,9 @@ def main():
                             pass
                     else:
                         continue
+                    
                     break
+                
         except Exception as ex:
             print(ex)
             time.sleep(5)
