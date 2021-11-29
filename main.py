@@ -58,8 +58,6 @@ def main():
             r = requests.get('https://auktion.biliaoutlet.se/Home/Search?Search=&submit-button=Sök')
             soup = BeautifulSoup(r.text, 'lxml')
             cars = soup.find_all(class_='card') + BeautifulSoup(requests.get('https://auktion.biliaoutlet.se').text, 'lxml').find_all(class_='card')
-            print(cars)
-            input()
             with open('users.pickle', 'rb') as f:
                 users = pickle.load(f)
                 print(users)
