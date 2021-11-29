@@ -69,7 +69,7 @@ def main():
             
             if check_car(get_link(car)):
                 for user in users:
-                    print("sending " + str(user))
+                    #print("sending " + str(user))
                     try:
                         send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
                         #print(f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}")
@@ -80,7 +80,7 @@ def main():
             print(ex)
             time.sleep(2)
             
-        time.sleep(2)
+        time.sleep(1)
 
 
 x = threading.Thread(target=main)
