@@ -58,6 +58,8 @@ def main():
             r = requests.get('https://auktion.biliaoutlet.se/Home/Search?Search=&submit-button=Sök')
             soup = BeautifulSoup(r.text, 'lxml')
             cars = soup.find_all(class_='card') + BeautifulSoup(requests.get('https://auktion.biliaoutlet.se').text, 'lxml').find_all(class_='card')
+            print(cars)
+            input()
             with open('users.pickle', 'rb') as f:
                 users = pickle.load(f)
                 print(users)
@@ -66,20 +68,24 @@ def main():
                 if check_car(get_link(car)):
                     for user in users:
                         try:
-                            send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
+                            #send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
+                            print(f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}")
                         except:
                             pass
                     else:
                         continue
+                    break
         except Exception as ex:
             print(ex)
-            time.sleep(10)
+            time.sleep(5)
             
-        time.sleep(20)
+        time.sleep(10)
 
 
 x = threading.Thread(target=main)
 x.start()
+
+f
 
 bot = telebot.TeleBot("2103027208:AAFedt2lIax0kZraXsqSgAe8VSW6VHLx8ZQ")
 
