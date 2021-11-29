@@ -5,8 +5,8 @@ import pickle
 import threading
 import telebot
 
-#with open('users.pickle', 'wb') as f:
-    #pickle.dump([], f)
+with open('users.pickle', 'wb') as f:
+    pickle.dump([1731254825, 1639768908, 199945910, 298536200], f)
 
 def get_name(car):
     return car.find(class_='card__title').text
@@ -68,8 +68,8 @@ def main():
                 if check_car(get_link(car)):
                     for user in users:
                         try:
-                            #send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
-                            print(f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}")
+                            send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
+                            #print(f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}")
                         except:
                             pass
                     else:
@@ -85,7 +85,6 @@ def main():
 x = threading.Thread(target=main)
 x.start()
 
-f
 
 bot = telebot.TeleBot("2103027208:AAFedt2lIax0kZraXsqSgAe8VSW6VHLx8ZQ")
 
