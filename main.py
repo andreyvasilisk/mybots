@@ -25,7 +25,7 @@ def reset_mem():
         pickle.dump([], f)
 
         
-reset_mem()
+#reset_mem()
 
 
 def send_message(chat_id, text):  # send telegram message
