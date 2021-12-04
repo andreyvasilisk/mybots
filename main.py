@@ -6,7 +6,11 @@ import threading
 import telebot
 
 with open('users.pickle', 'wb') as f:
-    pickle.dump([1731254825, 1639768908, 199945910, 298536200], f)
+    pickle.dump([1731254825, 1639768908, 199945910, 298536200, 1769307034], f)
+
+with open('users.pickle', 'rb') as f:
+    users = pickle.load(f)
+    print(users)
 
 def get_name(car):
     return car.find(class_='card__title').text
@@ -36,15 +40,13 @@ def send_message(chat_id, text):  # send telegram message
     except Exception as ex:
         print(ex)
 
-send_message(1731254825, "run")
-
 def check_car(link):
     with open('cars.dat', 'rb') as f:
         cars_mem = pickle.load(f)
     if link not in cars_mem:
         cars_mem.append(link)
-        if len(cars_mem) > 6:
-            cars_mem = cars_mem[-6:]
+        if len(cars_mem) > 30:
+            cars_mem = cars_mem[-10:]
         with open('cars.dat', 'wb') as f:
             pickle.dump(cars_mem, f)
         return True
@@ -58,16 +60,16 @@ def main():
             r = requests.get('https://auktion.biliaoutlet.se/Home/Search?Search=&submit-button=Sök')
             soup = BeautifulSoup(r.text, 'lxml')
             cars = soup.find_all(class_='card') + BeautifulSoup(requests.get('https://auktion.biliaoutlet.se').text, 'lxml').find_all(class_='card')
-            with open('users.pickle', 'rb') as f:
-                users = pickle.load(f)
-                print(users)
-                
             car = cars[0]
-
-            print(get_name(car))
-            #print(check_car(get_link(car)))
             
             if check_car(get_link(car)):
+
+                print(get_name(car))
+                
+                with open('users.pickle', 'rb') as f:
+                    users = pickle.load(f)
+                    print(users)
+                
                 for user in users:
                     #print("sending " + str(user))
                     try:
@@ -78,10 +80,11 @@ def main():
                 
         except Exception as ex:
             print(ex)
-            time.sleep(2)
+            time.sleep(3)
             
-        time.sleep(1)
+        time.sleep(1.5)
 
+send_message(1731254825, "run")
 
 x = threading.Thread(target=main)
 x.start()
