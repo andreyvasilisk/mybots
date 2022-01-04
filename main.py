@@ -4,9 +4,12 @@ import requests
 import pickle
 import threading
 import telebot
+from telebot import types
+
+bot = telebot.TeleBot("2103027208:AAFedt2lIax0kZraXsqSgAe8VSW6VHLx8ZQ")
 
 with open('users.pickle', 'wb') as f:
-    pickle.dump([1731254825, 1639768908, 199945910, 298536200, 1769307034], f)
+    pickle.dump([], f) #1731254825, 1639768908, 199945910, 298536200, 1769307034
 
 with open('users.pickle', 'rb') as f:
     users = pickle.load(f)
@@ -14,7 +17,6 @@ with open('users.pickle', 'rb') as f:
 
 def get_name(car):
     return car.find(class_='card__title').text
-
 
 def get_price(car):
     return car.find(class_='caption__top currentBid').find('strong').text
@@ -28,17 +30,7 @@ def reset_mem():
     with open('cars.dat', 'wb') as f:
         pickle.dump([], f)
 
-        
 #reset_mem()
-
-
-def send_message(chat_id, text):  # send telegram message
-    try:
-        URL = 'https://api.telegram.org/bot' + "2103027208:AAFedt2lIax0kZraXsqSgAe8VSW6VHLx8ZQ" + '/'
-        url = URL + f'sendMessage?chat_id={chat_id}&text={text}'
-        requests.get(url)
-    except Exception as ex:
-        print(ex)
 
 def check_car(link):
     with open('cars.dat', 'rb') as f:
@@ -46,12 +38,11 @@ def check_car(link):
     if link not in cars_mem:
         cars_mem.append(link)
         if len(cars_mem) > 30:
-            cars_mem = cars_mem[-10:]
+            cars_mem = cars_mem[-20:]
         with open('cars.dat', 'wb') as f:
             pickle.dump(cars_mem, f)
         return True
     return False
-
 
 
 def main():
@@ -73,7 +64,7 @@ def main():
                 for user in users:
                     #print("sending " + str(user))
                     try:
-                        send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
+                        bot.send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
                         #print(f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}")
                     except Exception as ex:
                         print(ex)
@@ -84,25 +75,80 @@ def main():
             
         time.sleep(1.5)
 
-send_message(1731254825, "run")
+bot.send_message(1731254825, "run")
 
 x = threading.Thread(target=main)
 x.start()
 
-bot = telebot.TeleBot("2103027208:AAFedt2lIax0kZraXsqSgAe8VSW6VHLx8ZQ")
+@bot.callback_query_handler(func=lambda call: True)
+def callback_inline(call):
+    if call.data.split(" ")[0] == "yes":
+        with open('users.pickle', 'rb') as f:
+            users = pickle.load(f)
+            
+        users.append( int(call.data.split(" ")[1]) )
+        
+        with open('users.pickle', 'wb') as f:
+                pickle.dump(users, f)
+
+        bot.send_message(int(call.data.split(" ")[1]), "Здравствуйте. Ваш запрос подтвердили. Теперь бот будет присылать вам ссылки.")
+        
+    elif call.data.split(" ")[0] == "no":
+        bot.send_message(int(call.data.split(" ")[1]), "Здравствуйте. Ваш запрос отклонили.")
+        bot.send_message(call.from_user.id, "Запрос отклонен.")
+
+    else:
+        with open('users.pickle', 'rb') as f:
+            users = pickle.load(f)
+            
+        users.remove( int(call.data.split(" ")[1]) )
+                     
+        with open('users.pickle', 'wb') as f:
+                pickle.dump(users, f)
+
+        bot.send_message(int(call.data.split(" ")[1]), "Здравствуйте. Вы были отключены от бота.")
+        bot.send_message(call.from_user.id, "Юзер отключен.")  
+
+@bot.message_handler(commands=['removeuser'])
+def remove_user(message):
+    if message.from_user.id == 1731254825 or message.from_user.id == 1639768908:
+        with open('users.pickle', 'rb') as f:
+            users = pickle.load(f)
+            
+        markup = types.InlineKeyboardMarkup(row_width=2)
+        
+        for user in users:
+            markup.add(types.InlineKeyboardButton(user, callback_data=f'remove {user}'))
+        
+        bot.send_message(message.from_user.id, text=f'Укажите айди:', reply_markup=markup)
 
 @bot.message_handler(content_types=["text"])
 def repeat_all_messages(message):
-    
-    with open('users.pickle', 'rb') as f:
-        users = pickle.load(f)
+    if message.from_user.id != 1731254825 and message.from_user.id != 1639768908:
+        with open('users.pickle', 'rb') as f:
+            users = pickle.load(f)
 
-    if message.from_user.id not in users:
-        users.append(message.from_user.id)
-        bot.send_message(message.chat.id, "Поздравляю, теперь вы можете пользоваться ботом.")
-        with open('users.pickle', 'wb') as f:
-            pickle.dump(users, f)
+        if message.from_user.id not in users:
+            bot.send_message(message.from_user.id, "Запрос на регистрацию отправлен админу. Ждите подтверждения")
+
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            item1 = types.InlineKeyboardButton("подтвердить", callback_data=f'yes {message.from_user.id}')
+            item2 = types.InlineKeyboardButton("отклонить", callback_data=f'no {message.from_user.id}')
+            markup.add(item1, item2)
+            
+            bot.send_message(1731254825, text=f'Запрос от {message.from_user.first_name}. Айди: {message.from_user.id}', reply_markup=markup)
+            
+        else:
+            bot.send_message(message.from_user.id, "Вы уже зарегистрированы в боте, можете им пользоваться.")
     else:
-        bot.send_message(message.chat.id, "Вы уже можете пользоваться ботом!")
+        with open('users.pickle', 'rb') as f:
+            users = pickle.load(f)
+        if message.text not in users:
+            users.append(message.text)
+            with open('users.pickle', 'wb') as f:
+                pickle.dump(users, f)
+            bot.send_message(message.from_user.id, "Пользователь успешно добавлен.")
+        else:
+            bot.send_message(message.from_user.id, "Пользователь уже в базе.")
 
 bot.infinity_polling()
