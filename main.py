@@ -8,8 +8,8 @@ from telebot import types
 
 bot = telebot.TeleBot("2103027208:AAFedt2lIax0kZraXsqSgAe8VSW6VHLx8ZQ")
 
-with open('users.pickle', 'wb') as f:
-    pickle.dump([], f) #1731254825, 1639768908, 199945910, 298536200, 1769307034
+#with open('users.pickle', 'wb') as f:
+#    pickle.dump([], f) #1731254825, 1639768908, 199945910, 298536200, 1769307034
 
 with open('users.pickle', 'rb') as f:
     users = pickle.load(f)
@@ -144,7 +144,7 @@ def repeat_all_messages(message):
         with open('users.pickle', 'rb') as f:
             users = pickle.load(f)
         if message.text not in users:
-            users.append(message.text)
+            users.append(int(message.text))
             with open('users.pickle', 'wb') as f:
                 pickle.dump(users, f)
             bot.send_message(message.from_user.id, "Пользователь успешно добавлен.")
