@@ -64,8 +64,8 @@ def main():
                 for user in users:
                     #print("sending " + str(user))
                     try:
-                        bot.send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
-                        #print(f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}")
+                        #bot.send_message(user, f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}") #user
+                        print(f"Название: {get_name(car)}\nЦена: {get_price(car)}\nСсылка: {get_link(car)}")
                     except Exception as ex:
                         print(ex)
                 
