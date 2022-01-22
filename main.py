@@ -75,7 +75,7 @@ def main():
             
         time.sleep(1.5)
 
-bot.send_message(1731254825, "run")
+bot.send_message(992579379, "run")
 
 x = threading.Thread(target=main)
 x.start()
@@ -111,7 +111,7 @@ def callback_inline(call):
 
 @bot.message_handler(commands=['removeuser'])
 def remove_user(message):
-    if message.from_user.id == 1731254825 or message.from_user.id == 1639768908:
+    if message.from_user.id == 992579379 or message.from_user.id == 1639768908:
         with open('users.pickle', 'rb') as f:
             users = pickle.load(f)
             
@@ -124,7 +124,7 @@ def remove_user(message):
 
 @bot.message_handler(content_types=["text"])
 def repeat_all_messages(message):
-    if message.from_user.id != 1731254825 and message.from_user.id != 1639768908:
+    if message.from_user.id != 992579379 and message.from_user.id != 1639768908:
         with open('users.pickle', 'rb') as f:
             users = pickle.load(f)
 
@@ -136,7 +136,7 @@ def repeat_all_messages(message):
             item2 = types.InlineKeyboardButton("отклонить", callback_data=f'no {message.from_user.id}')
             markup.add(item1, item2)
             
-            bot.send_message(1731254825, text=f'Запрос от {message.from_user.first_name}. Айди: {message.from_user.id}', reply_markup=markup)
+            bot.send_message(992579379, text=f'Запрос от {message.from_user.first_name}. Айди: {message.from_user.id}', reply_markup=markup)
             
         else:
             bot.send_message(message.from_user.id, "Вы уже зарегистрированы в боте, можете им пользоваться.")
